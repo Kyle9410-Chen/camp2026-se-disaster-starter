@@ -7,6 +7,12 @@ import assignmentsData from "../fixtures/shared/assignments.json";
 import { RecordCard } from "../components/RecordCard";
 import { EmptyState } from "../components/EmptyState";
 import { ErrorState } from "../components/ErrorState";
+import { TriageBoard } from "../features/triage/TriageBoard";
+import {
+  confirmedRecordsByTarget,
+  messyReportsSchema,
+} from "../features/triage/normalize";
+import { useTriageDecisions } from "../features/triage/useTriageDecisions";
 import {
   assignmentsSchema,
   reportsSchema,
@@ -18,7 +24,7 @@ import { safeParseFixture } from "../lib/load-fixture";
 type TabKey = "messy" | "reports" | "sites" | "tasks" | "assignments";
 
 const tabs: Array<{ key: TabKey; label: string }> = [
-  { key: "messy", label: "第一階段原始資訊" },
+  { key: "messy", label: "第一階段：資訊分流" },
   { key: "reports", label: "通報" },
   { key: "sites", label: "地點" },
   { key: "tasks", label: "志工任務" },
@@ -27,6 +33,16 @@ const tabs: Array<{ key: TabKey; label: string }> = [
 
 export function App() {
   const [activeTab, setActiveTab] = useState<TabKey>("messy");
+
+  const messy = useMemo(
+    () =>
+      safeParseFixture(
+        messyReportsSchema,
+        messyReports,
+        "src/fixtures/phase-0/messy-reports.json",
+      ),
+    [],
+  );
 
   const parsed = useMemo(() => {
     const reports = safeParseFixture(
@@ -68,15 +84,33 @@ export function App() {
     };
   }, []);
 
+  const messyList = useMemo(() => (messy.success ? messy.data : []), [messy]);
+  const { decisions, setDecision } = useTriageDecisions(messyList);
+
+  const triageConfirmed = useMemo(
+    () => confirmedRecordsByTarget(messyList, decisions),
+    [messyList, decisions],
+  );
+
   const records = parsed.success
     ? (() => {
-        if (activeTab === "messy") return messyReports;
         if (activeTab === "reports") return parsed.data.reports;
         if (activeTab === "sites") return parsed.data.sites;
         if (activeTab === "tasks") return parsed.data.tasks;
         return parsed.data.assignments;
       })()
     : [];
+
+  const triageCopies =
+    activeTab === "reports"
+      ? triageConfirmed.report
+      : activeTab === "sites"
+        ? triageConfirmed.site
+        : activeTab === "tasks"
+          ? triageConfirmed.task
+          : activeTab === "assignments"
+            ? triageConfirmed.assignment
+            : [];
 
   return (
     <main className="layout">
@@ -106,19 +140,52 @@ export function App() {
       <section className="panel">
         {!parsed.success ? (
           <ErrorState message={parsed.message} />
-        ) : records.length === 0 ? (
+        ) : activeTab === "messy" ? (
+          !messy.success ? (
+            <ErrorState message={messy.message} />
+          ) : (
+            <>
+              <div className="panel__header">
+                <h2>{tabs.find((tab) => tab.key === activeTab)?.label}</h2>
+                <p>{messy.data.length} 筆原始資料</p>
+              </div>
+              <TriageBoard
+                reports={messy.data}
+                decisions={decisions}
+                onChange={setDecision}
+              />
+            </>
+          )
+        ) : records.length === 0 && triageCopies.length === 0 ? (
           <EmptyState message="目前沒有資料" />
         ) : (
           <>
             <div className="panel__header">
               <h2>{tabs.find((tab) => tab.key === activeTab)?.label}</h2>
-              <p>{records.length} 筆資料</p>
+              <p>
+                {records.length} 筆資料
+                {triageCopies.length > 0
+                  ? `，另含 ${triageCopies.length} 筆由分流確認複製`
+                  : ""}
+              </p>
             </div>
-            <div className="grid">
-              {records.map((record) => (
-                <RecordCard key={record.id} record={record} />
-              ))}
-            </div>
+            {records.length > 0 ? (
+              <div className="grid">
+                {records.map((record) => (
+                  <RecordCard key={record.id} record={record} />
+                ))}
+              </div>
+            ) : null}
+            {triageCopies.length > 0 ? (
+              <div className="triage-copies">
+                <h3>由資訊分流確認後複製過來</h3>
+                <div className="grid">
+                  {triageCopies.map((record) => (
+                    <RecordCard key={record.id} record={record} />
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </>
         )}
       </section>

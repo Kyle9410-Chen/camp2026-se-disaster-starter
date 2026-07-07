@@ -23,7 +23,10 @@
 
 | 時間 | 階段 | 任務 | AI / Agent 建議 | 採用 / 拒絕 | 人類判斷理由 | 相關檔案 / commit |
 | ---- | ---- | ---- | --------------- | ----------- | ------------ | ----------------- |
-|      |      |      |                 |             |              |                   |
+| —    | Phase 0 | 建立資訊分流工作台 | 把 messy phase-0 髒資料透過人工分流轉成合法 Report，並用既有 adapter 預覽下游路由；`verified` 需人工分類＋填責任角色才可設定 | 採用 | 保留人工確認點，不讓系統把未確認資料自動當成事實；缺漏欄位由人補、`createdAt` 以 `updatedAt` 代理 | `src/features/triage/*`、`src/app/App.tsx`、`tests/triage-normalize.test.ts` |
+| —    | Phase 0 | 分流決策持久化與欄位調整 | 決策（已同意 / 已拒絕 / 分類）以 schema 驗證後存入 localStorage 跨重整保留；原始資料維持唯讀；暫時移除審核者角色欄位 | 採用 | 保留原始髒資料不被覆蓋；讀回逐筆驗證避免壞資料污染；角色欄位依需求暫緩，`reporterRole` 先填占位值符合 schema | `src/features/triage/normalize.ts`、`TriageBoard.tsx`、`TriageCard.tsx` |
+| —    | Phase 0 | 確認結果複製到下游分頁 | 決策狀態提升到 App 由 `useTriageDecisions` 集中，`verified` Report 複製到通報、衍生任務複製到志工任務分頁 | 採用 | 使用者期望確認的任務出現在下游 session；複製為 UI 顯示不覆蓋 starter fixtures；地點/人員指派無單一 Report 衍生故暫不複製 | `src/app/App.tsx`、`src/features/triage/useTriageDecisions.ts`、`normalize.ts` |
+| —    | Phase 0 | 分流改四大家族＋dialog 表單 | 分類直接改成通報/地點/志工任務/人員指派；每類 dialog 表單（必填＋重點選填）即時驗證，確認後複製到四分頁 | 採用 | 更直接的心智模型取代 raw→Report→adapter 鏈；參照欄位不強制硬 ID（Assignment 留空填 `unassigned`）；共同欄位系統帶入、時間正規化；決策 union 存 localStorage v2 | `src/features/triage/{normalize,labels,TriageDialog,TriageCard,TriageBoard}.ts(x)`、`src/app/App.tsx` |
 
 ## 範例
 

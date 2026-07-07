@@ -171,6 +171,246 @@ button {
   color: #245d9d;
 }
 
+.triage-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.triage-summary span {
+  border-radius: 999px;
+  padding: 4px 12px;
+  background: #eef2f8;
+  color: #344054;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.triage-note {
+  margin: 0 0 16px;
+  color: #8a5a00;
+  font-size: 0.9rem;
+}
+
+.triage-card--needs_review {
+  border-left: 4px solid #d9a406;
+}
+
+.triage-card--verified {
+  border-left: 4px solid #116b37;
+}
+
+.triage-card--rejected {
+  border-left: 4px solid #9f1f17;
+  background: #fdf6f5;
+}
+
+.triage-controls {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f2;
+}
+
+.triage-field {
+  display: grid;
+  gap: 4px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #344054;
+}
+
+.triage-field select,
+.triage-field input {
+  font: inherit;
+  font-weight: 400;
+  padding: 8px 10px;
+  border: 1px solid #cfd8e3;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.triage-decision {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.triage-decision button {
+  border: 1px solid #cfd8e3;
+  border-radius: 999px;
+  padding: 6px 14px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.triage-decision button.active {
+  border-color: #245d9d;
+  background: #245d9d;
+  color: #ffffff;
+}
+
+.triage-decision button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.triage-hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #8a5a00;
+}
+
+.triage-preview {
+  display: grid;
+  gap: 8px;
+  border-top: 1px dashed #d5deea;
+  padding-top: 12px;
+}
+
+.triage-ok {
+  margin: 0;
+  color: #116b37;
+  font-weight: 700;
+}
+
+.triage-bad {
+  color: #9f1f17;
+}
+
+.triage-bad p {
+  margin: 0 0 4px;
+  font-weight: 700;
+}
+
+.triage-bad pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: 0.8rem;
+}
+
+.triage-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f2;
+}
+
+.triage-card__class {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #344054;
+}
+
+.triage-card__footer button {
+  border: 1px solid #245d9d;
+  border-radius: 999px;
+  padding: 6px 14px;
+  background: #245d9d;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.triage-dialog {
+  width: min(560px, calc(100% - 32px));
+  border: none;
+  border-radius: 20px;
+  padding: 0;
+  box-shadow: 0 24px 60px rgb(23 32 42 / 24%);
+}
+
+.triage-dialog::backdrop {
+  background: rgb(23 32 42 / 45%);
+}
+
+.triage-dialog__body {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.triage-dialog__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.triage-dialog__head p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.triage-dialog__eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a5a00;
+}
+
+.triage-dialog__close {
+  flex-shrink: 0;
+  border: 1px solid #cfd8e3;
+  border-radius: 999px;
+  padding: 6px 14px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.triage-dialog__form {
+  display: grid;
+  gap: 12px;
+}
+
+.triage-dialog__form textarea {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid #cfd8e3;
+  border-radius: 10px;
+  background: #ffffff;
+  resize: vertical;
+}
+
+.triage-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.triage-targets button {
+  border: 1px solid #cfd8e3;
+  border-radius: 999px;
+  padding: 8px 16px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.triage-targets button.active {
+  border-color: #245d9d;
+  background: #245d9d;
+  color: #ffffff;
+}
+
+.triage-copies {
+  margin-top: 24px;
+  border-top: 1px dashed #cdd8e6;
+  padding-top: 16px;
+}
+
+.triage-copies h3 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  color: #245d9d;
+}
+
 .empty-state,
 .error-state {
   border-radius: 16px;
